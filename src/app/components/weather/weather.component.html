@@ -7,6 +7,8 @@
       Add location
     </button>
   </div>
-  <app-weather-card *ngFor="let zipCode of locationList"></app-weather-card>
+  <app-weather-card *ngFor="let info of weatherInfo; let i = index" [cardInfo]="info" [zipCode]="locationList[i]"
+    (cardRemoved)="removeLocation($event)">
+  </app-weather-card>
 </div>
 <hr>
