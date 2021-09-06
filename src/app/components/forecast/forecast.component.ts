@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { WeatherService } from '../../services/weather.service';
 
 @Component({
   selector: 'app-forecast',
@@ -6,7 +8,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./forecast.component.css']
 })
 export class ForecastComponent implements OnInit {
-  constructor() {}
+  zipCode: number;
 
-  ngOnInit() {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private weatherService: WeatherService
+  ) {}
+
+  ngOnInit() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      if (params.has('zipCode')) {
+        this.zipCode = Number(params.get('zipCode'));
+      }
+    });
+  }
+
+  getFiveDayForecast(zipCode: number) {
+    this.weatherService.getFullForecast(zipCode).subscribe(info => {
+      console.log(info);
+    });
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { WeatherService } from '../../services/weather.service';
-import { WeatherInfo } from '../../types/weather.interface';
+import { WeatherInfo } from '../../interfaces/weather.interface';
 
 @Component({
   selector: 'app-weather',

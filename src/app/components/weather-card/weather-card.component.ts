@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { WeatherInfo } from '../../types/weather.interface';
+import { WeatherInfo } from '../../interfaces/weather.interface';
+import { weatherImages } from '../../utils/images';
 
 @Component({
   selector: 'app-weather-card',
@@ -7,8 +8,7 @@ import { WeatherInfo } from '../../types/weather.interface';
   styleUrls: ['./weather-card.component.css']
 })
 export class WeatherCardComponent implements OnInit {
-  @Input() cardInfo: WeatherInfo;
-  @Input() zipCode: number;
+  @Input() cardInfo: WeatherInfo & { zipCode: number };
 
   @Output() cardRemoved = new EventEmitter();
   image: string;
@@ -16,27 +16,32 @@ export class WeatherCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    if(!this.cardInfo) {
+    if (!this.cardInfo) {
       this.image = '';
       return;
     }
-    switch(this.cardInfo.weather[0].main) {
+    switch (this.cardInfo.weather[0].main) {
+      case 'Drizzle':
       case 'Rain': {
-        this.image = 'https://www.angulartraining.com/images/weather/rain.png'
+        this.image = weatherImages.rain;
         break;
       }
       case 'Clouds': {
-        this.image = 'https://www.angulartraining.com/images/weather/clouds.png';
+        this.image = weatherImages.clouds;
         break;
       }
       case 'Clear': {
-        this.image = 'https://www.angulartraining.com/images/weather/sun.png'
+        this.image = weatherImages.sun;
+        break;
+      }
+      default: {
+        this.image = weatherImages.snow;
+        break;
       }
     }
-    
   }
 
   removeCard() {
-    this.cardRemoved.emit(this.zipCode);
+    this.cardRemoved.emit(this.cardInfo.zipCode);
   }
 }
