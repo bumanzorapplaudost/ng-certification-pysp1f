@@ -39,9 +39,10 @@ export class WeatherComponent implements OnInit {
       this.weatherService.getByZip(zipCode)
     );
     forkJoin(requestList).subscribe(req => {
-      this.weatherInfo = req.map((item, idx) => ({
+      console.log(req);
+      this.weatherInfo = req.map((item, index) => ({
         ...item,
-        zipCode: this.locationList[idx]
+        zipCode: this.locationList[index]
       }));
     });
   }

@@ -25,10 +25,11 @@ export class WeatherService {
     });
   }
 
-  getFullForecast(zipCode: number) {
-    return this.httpClient.get(`${this.weatherUrl}/onecall`, {
+  getFullForecast(city: string, zipCode: number) {
+    return this.httpClient.get(`${this.weatherUrl}/forecast/daily`, {
       params: {
-        ...this.params
+        ...this.params,
+        zip: `${zipCode}`
       }
     });
   }

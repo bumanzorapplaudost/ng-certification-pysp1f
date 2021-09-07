@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WeatherInfo } from '../../interfaces/weather.interface';
+import { getImageUrl } from '../../utils/getImageUrl';
 import { weatherImages } from '../../utils/images';
 
 @Component({
@@ -13,32 +14,13 @@ export class WeatherCardComponent implements OnInit {
   @Output() cardRemoved = new EventEmitter();
   image: string;
 
-  constructor() {}
-
   ngOnInit() {
     if (!this.cardInfo) {
       this.image = '';
       return;
     }
-    switch (this.cardInfo.weather[0].main) {
-      case 'Drizzle':
-      case 'Rain': {
-        this.image = weatherImages.rain;
-        break;
-      }
-      case 'Clouds': {
-        this.image = weatherImages.clouds;
-        break;
-      }
-      case 'Clear': {
-        this.image = weatherImages.sun;
-        break;
-      }
-      default: {
-        this.image = weatherImages.snow;
-        break;
-      }
-    }
+
+    this.image = getImageUrl(this.cardInfo.weather[0].main);
   }
 
   removeCard() {
