@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { concatMap } from 'rxjs/operators';
+import { ForecastData } from '../../interfaces/forecast.interface';
 import { WeatherService } from '../../services/weather.service';
 import { getImageUrl } from '../../utils/getImageUrl';
 
@@ -11,7 +12,7 @@ import { getImageUrl } from '../../utils/getImageUrl';
 })
 export class ForecastComponent implements OnInit {
   zipCode: number;
-  data: any;
+  data: ForecastData;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,9 +36,8 @@ export class ForecastComponent implements OnInit {
           return this.weatherService.getFullForecast(data.name, this.zipCode);
         })
       )
-      .subscribe(r => {
-        console.log(r);
-        this.data = r;
+      .subscribe(response => {
+        this.data = response;
       });
   }
 

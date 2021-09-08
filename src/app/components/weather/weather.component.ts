@@ -9,9 +9,11 @@ import { WeatherInfo } from '../../interfaces/weather.interface';
   styleUrls: ['./weather.component.css']
 })
 export class WeatherComponent implements OnInit {
-  location: string;
+  location = '';
   locationList: number[] = [];
   weatherInfo: (WeatherInfo & { zipCode: number })[] = [];
+  showErrorMessage = false;
+  errorMessage: string;
 
   constructor(private weatherService: WeatherService) {}
 
@@ -25,21 +27,39 @@ export class WeatherComponent implements OnInit {
 
   addLocation() {
     const locations = JSON.parse(localStorage.getItem('zipCodes'));
-    localStorage.setItem(
-      'zipCodes',
-      JSON.stringify([...locations, Number(this.location)])
-    );
+    
+    const zipCode = Number(this.location);
     this.location = '';
-    this.getLocations();
+
+
+    this.weatherService.getByZip(zipCode).subscribe(info => {
+      localStorage.setItem(
+        'zipCodes',
+        JSON.stringify([...(locations ?? []), Number(this.location)])
+      );
+      this.weatherInfo = [
+        ...this.weatherInfo,
+        {
+          ...info,
+          zipCode
+        }
+      ];
+    }, () => {
+      this.showErrorMessage = true;
+      this.errorMessage = 'Invalid ZIP code.';
+      setTimeout(() => {
+        this.showErrorMessage = false;
+        this.errorMessage = '';
+      }, 5000)
+    });
   }
 
-  getLocations() {
+  getLocations(): void {
     this.locationList = JSON.parse(localStorage.getItem('zipCodes'));
     const requestList = this.locationList.map(zipCode =>
       this.weatherService.getByZip(zipCode)
     );
     forkJoin(requestList).subscribe(req => {
-      console.log(req);
       this.weatherInfo = req.map((item, index) => ({
         ...item,
         zipCode: this.locationList[index]
@@ -47,11 +67,19 @@ export class WeatherComponent implements OnInit {
     });
   }
 
-  removeLocation(zipCode: number) {
+  removeLocation(zipCode: number): void {
     this.locationList = this.locationList.filter(zip => zipCode !== zip);
     this.weatherInfo = this.weatherInfo.filter(
       weather => weather.zipCode !== zipCode
     );
     localStorage.setItem('zipCodes', JSON.stringify(this.locationList));
+  }
+
+  clearLocations(): void {
+    this.location = '';
+    this.locationList = [];
+    this.weatherInfo = [];
+    this.showErrorMessage = false;
+    localStorage.removeItem('zipCodes');
   }
 }

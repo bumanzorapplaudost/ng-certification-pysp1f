@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ForecastData } from '../interfaces/forecast.interface';
 import { WeatherInfo } from '../interfaces/weather.interface';
 
 @Injectable({
@@ -25,12 +26,15 @@ export class WeatherService {
     });
   }
 
-  getFullForecast(city: string, zipCode: number) {
-    return this.httpClient.get(`${this.weatherUrl}/forecast/daily`, {
-      params: {
-        ...this.params,
-        zip: `${zipCode}`
+  getFullForecast(city: string, zipCode: number): Observable<ForecastData> {
+    return this.httpClient.get<ForecastData>(
+      `${this.weatherUrl}/forecast/daily`,
+      {
+        params: {
+          ...this.params,
+          zip: `${zipCode}`
+        }
       }
-    });
+    );
   }
 }

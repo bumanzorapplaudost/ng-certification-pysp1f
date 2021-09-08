@@ -1,4 +1,4 @@
-export interface Coord {
+export interface Coordinates {
   lon: number;
   lat: number;
 }
@@ -37,7 +37,7 @@ export interface Sys {
 }
 
 export interface WeatherInfo {
-  coord: Coord;
+  coord: Coordinates;
   weather: Weather[];
   base: string;
   main: Main;

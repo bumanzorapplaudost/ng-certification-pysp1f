@@ -6,7 +6,9 @@ export const getImageUrl = (weather: string) => {
     case 'Rain': {
       return weatherImages.rain;
     }
-    case 'Clouds': {
+    case 'Clouds':
+    case 'Haze':
+    case 'Mist': {
       return weatherImages.clouds;
     }
     case 'Clear': {
