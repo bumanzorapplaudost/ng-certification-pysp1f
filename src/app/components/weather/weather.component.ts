@@ -33,9 +33,11 @@ export class WeatherComponent implements OnInit {
 
 
     this.weatherService.getByZip(zipCode).subscribe(info => {
+      this.locationList = [...(locations ?? []), zipCode];
+      
       localStorage.setItem(
         'zipCodes',
-        JSON.stringify([...(locations ?? []), zipCode])
+        JSON.stringify(this.locationList)
       );
       this.weatherInfo = [
         ...this.weatherInfo,
@@ -68,10 +70,14 @@ export class WeatherComponent implements OnInit {
   }
 
   removeLocation(zipCode: number): void {
-    this.locationList = this.locationList.filter(zip => zipCode !== zip);
+    this.locationList = this.locationList.filter(zip => {
+      return zipCode !== zip;
+    });
+
     this.weatherInfo = this.weatherInfo.filter(
       weather => weather.zipCode !== zipCode
     );
+
     localStorage.setItem('zipCodes', JSON.stringify(this.locationList));
   }
 
