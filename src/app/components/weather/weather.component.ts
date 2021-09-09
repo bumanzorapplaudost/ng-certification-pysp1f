@@ -35,7 +35,7 @@ export class WeatherComponent implements OnInit {
     this.weatherService.getByZip(zipCode).subscribe(info => {
       localStorage.setItem(
         'zipCodes',
-        JSON.stringify([...(locations ?? []), Number(this.location)])
+        JSON.stringify([...(locations ?? []), zipCode])
       );
       this.weatherInfo = [
         ...this.weatherInfo,
